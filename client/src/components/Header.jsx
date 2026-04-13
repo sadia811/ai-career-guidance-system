@@ -13,7 +13,18 @@ function Header({
     showProfileButton = true,
     profilePath = "/auth",
     onProfileClick,
+    rightAction = null,
 }) {
+    const resolvedRightAction =
+        rightAction ??
+        (showProfileButton
+            ? {
+                type: "profile",
+                to: profilePath,
+                onClick: onProfileClick,
+            }
+            : null);
+
     return (
         <header className="site-header">
             <Link to={homePath} className="site-brand brand-link">
@@ -29,24 +40,31 @@ function Header({
                 ))}
             </nav>
 
-            {showProfileButton && (
-                <>
-                    {onProfileClick ? (
-                        <button
-                            type="button"
-                            className="profile-btn"
-                            aria-label="Profile"
-                            onClick={onProfileClick}
-                        >
-                            <ProfileIcon />
-                        </button>
-                    ) : (
-                        <Link to={profilePath} className="profile-btn" aria-label="Profile">
-                            <ProfileIcon />
-                        </Link>
-                    )}
-                </>
+            {resolvedRightAction?.type === "button" && (
+                <Link to={resolvedRightAction.to} className="header-action-btn">
+                    {resolvedRightAction.label}
+                </Link>
             )}
+
+            {resolvedRightAction?.type === "profile" &&
+                (resolvedRightAction.onClick ? (
+                    <button
+                        type="button"
+                        className="profile-btn"
+                        aria-label="Profile"
+                        onClick={resolvedRightAction.onClick}
+                    >
+                        <ProfileIcon />
+                    </button>
+                ) : (
+                    <Link
+                        to={resolvedRightAction.to}
+                        className="profile-btn"
+                        aria-label="Profile"
+                    >
+                        <ProfileIcon />
+                    </Link>
+                ))}
         </header>
     );
 }
