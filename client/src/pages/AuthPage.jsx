@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/AuthPage.css";
@@ -10,6 +11,21 @@ const guestNavLinks = [
 ];
 
 function AuthPage() {
+    const [searchParams] = useSearchParams();
+    const feature = searchParams.get("feature");
+
+    const featureMessages = {
+        "career-prediction": "Please login or register to use Career Prediction.",
+        "skill-gap-analysis":
+            "Please login or register to use Skill Gap Analysis.",
+        "learning-roadmap":
+            "Please login or register to access your personalized Learning Roadmap.",
+        "progress-tracking":
+            "Please login or register to track your career progress.",
+    };
+
+    const featurePrompt = featureMessages[feature] || "";
+
     const [activeTab, setActiveTab] = useState("register");
 
     const [loginForm, setLoginForm] = useState({
@@ -75,6 +91,12 @@ function AuthPage() {
                         <span>Register / </span>
                         <span className="heading-accent">Login</span>
                     </h1>
+
+                    {featurePrompt && (
+                        <div className="auth-feature-message">
+                            {featurePrompt}
+                        </div>
+                    )}
 
                     <div className="auth-tab-switcher">
                         <button

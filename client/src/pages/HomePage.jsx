@@ -12,21 +12,25 @@ const visitorNavLinks = [
 
 const features = [
     {
+        slug: "career-prediction",
         title: "Career Prediction",
         description: "AI-powered career recommendations",
         icon: <PredictionIcon />,
     },
     {
+        slug: "skill-gap-analysis",
         title: "Skill Gap Analysis",
         description: "Identify missing skills for your desired job",
         icon: <SkillGapIcon />,
     },
     {
+        slug: "learning-roadmap",
         title: "Personalized Learning Roadmap",
         description: "Step-by-step guide for your career path",
         icon: <RoadmapIcon />,
     },
     {
+        slug: "progress-tracking",
         title: "Progress Tracking",
         description: "Monitor and achieve your career goals",
         icon: <ProgressIcon />,
@@ -93,18 +97,26 @@ function HomePage() {
                     </div>
 
                     <div className="hero-visual">
-                        <img src={homeImage} alt="Career guidance illustration" className="hero-image" />
+                        <img
+                            src={homeImage}
+                            alt="Career guidance illustration"
+                            className="hero-image"
+                        />
                     </div>
                 </section>
 
                 <section className="features-section">
                     <div className="features-grid">
                         {features.map((feature) => (
-                            <article key={feature.title} className="feature-card">
+                            <Link
+                                key={feature.slug}
+                                to={`/auth?feature=${feature.slug}`}
+                                className="feature-card"
+                            >
                                 <div className="feature-icon">{feature.icon}</div>
                                 <h3>{feature.title}</h3>
                                 <p>{feature.description}</p>
-                            </article>
+                            </Link>
                         ))}
                     </div>
                 </section>
@@ -190,8 +202,20 @@ function ProgressIcon() {
             <rect x="20" y="37" width="8" height="17" rx="3" fill="#8EB6F7" />
             <rect x="32" y="29" width="8" height="25" rx="3" fill="#F1C468" />
             <rect x="44" y="20" width="8" height="34" rx="3" fill="#6D9CE8" />
-            <path d="M18 23L28 17L37 24L52 11" stroke="#F2A564" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M48 11H52V15" stroke="#F2A564" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+                d="M18 23L28 17L37 24L52 11"
+                stroke="#F2A564"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M48 11H52V15"
+                stroke="#F2A564"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
         </svg>
     );
 }
@@ -229,8 +253,20 @@ function SoftwareEngineerIcon() {
     return (
         <svg viewBox="0 0 64 64" fill="none" aria-hidden="true">
             <rect x="10" y="14" width="44" height="28" rx="5" fill="#EEF4FF" stroke="#8AB3F4" strokeWidth="3" />
-            <path d="M24 28L19 32L24 36" stroke="#4F86E8" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M40 28L45 32L40 36" stroke="#4F86E8" strokeWidth="4" strokeLinecap="round" strokeLinejoin="round" />
+            <path
+                d="M24 28L19 32L24 36"
+                stroke="#4F86E8"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
+            <path
+                d="M40 28L45 32L40 36"
+                stroke="#4F86E8"
+                strokeWidth="4"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+            />
             <path d="M34 24L30 40" stroke="#7BAAF1" strokeWidth="4" strokeLinecap="round" />
             <rect x="20" y="46" width="24" height="4" rx="2" fill="#BBD2F8" />
         </svg>
