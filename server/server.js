@@ -9,10 +9,26 @@ dotenv.config();
 connectDB();
 
 const app = express();
+const allowedOrigins = [
+    "http://localhost:5173",
+    process.env.CLIENT_URL,
+].filter(Boolean);
 
 app.use(
     cors({
-        origin: process.env.CLIENT_URL,
+        origin: (origin, callback) => {
+            if (!origin) return callback(null, true);
+
+            const isAllowed =
+                allowedOrigins.includes(origin) ||
+                /\.vercel\.app$/.test(new URL(origin).hostname);
+
+            if (isAllowed) {
+                return callback(null, true);
+            }
+
+            return callback(new Error(`CORS blocked for origin: ${origin}`));
+        },
         credentials: true,
     })
 );
