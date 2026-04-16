@@ -1,8 +1,11 @@
 import { useState } from "react";
-import { useSearchParams } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/AuthPage.css";
+
+const API_URL = import.meta.env.VITE_API_URL || "http://localhost:5000";
+const REDIRECT_AFTER_AUTH = "/app/explore-careers"; // change this if your logged-in page route is different
 
 const guestNavLinks = [
     { label: "Home", to: "/" },
@@ -11,6 +14,7 @@ const guestNavLinks = [
 ];
 
 function AuthPage() {
+    const navigate = useNavigate();
     const [searchParams] = useSearchParams();
     const feature = searchParams.get("feature");
 
@@ -39,41 +43,133 @@ function AuthPage() {
         password: "",
     });
 
+    const [loginLoading, setLoginLoading] = useState(false);
+    const [registerLoading, setRegisterLoading] = useState(false);
+
+    const [loginError, setLoginError] = useState("");
+    const [registerError, setRegisterError] = useState("");
+    const [loginSuccess, setLoginSuccess] = useState("");
+    const [registerSuccess, setRegisterSuccess] = useState("");
+
     const isLoginActive = activeTab === "login";
     const isRegisterActive = activeTab === "register";
 
+    const clearMessages = () => {
+        setLoginError("");
+        setRegisterError("");
+        setLoginSuccess("");
+        setRegisterSuccess("");
+    };
+
     const handleLoginChange = (e) => {
         const { name, value } = e.target;
+
         setLoginForm((prev) => ({
             ...prev,
             [name]: value,
         }));
+
+        setLoginError("");
+        setLoginSuccess("");
     };
 
     const handleRegisterChange = (e) => {
         const { name, value } = e.target;
+
         setRegisterForm((prev) => ({
             ...prev,
             [name]: value,
         }));
+
+        setRegisterError("");
+        setRegisterSuccess("");
     };
 
     const handleLoginSubmit = async (e) => {
         e.preventDefault();
+        setLoginError("");
+        setLoginSuccess("");
 
-        // Later backend integration:
-        // await fetch("http://localhost:5000/api/auth/login", {...})
+        if (!loginForm.email || !loginForm.password) {
+            setLoginError("Please provide email and password.");
+            return;
+        }
 
-        console.log("Login payload:", loginForm);
+        try {
+            setLoginLoading(true);
+
+            const response = await fetch(`${API_URL}/api/auth/login`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(loginForm),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setLoginError(data.message || "Login failed.");
+                return;
+            }
+
+            localStorage.setItem("userInfo", JSON.stringify(data.user));
+            setLoginSuccess("Login successful. Redirecting...");
+
+            setTimeout(() => {
+                navigate(REDIRECT_AFTER_AUTH);
+            }, 700);
+        } catch (error) {
+            setLoginError("Unable to connect to server. Please try again.");
+        } finally {
+            setLoginLoading(false);
+        }
     };
 
     const handleRegisterSubmit = async (e) => {
         e.preventDefault();
+        setRegisterError("");
+        setRegisterSuccess("");
 
-        // Later backend integration:
-        // await fetch("http://localhost:5000/api/auth/register", {...})
+        if (!registerForm.name || !registerForm.email || !registerForm.password) {
+            setRegisterError("Please fill in all fields.");
+            return;
+        }
 
-        console.log("Register payload:", registerForm);
+        if (registerForm.password.length < 6) {
+            setRegisterError("Password must be at least 6 characters.");
+            return;
+        }
+
+        try {
+            setRegisterLoading(true);
+
+            const response = await fetch(`${API_URL}/api/auth/register`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify(registerForm),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setRegisterError(data.message || "Registration failed.");
+                return;
+            }
+
+            localStorage.setItem("userInfo", JSON.stringify(data.user));
+            setRegisterSuccess("Registration successful. Redirecting...");
+
+            setTimeout(() => {
+                navigate(REDIRECT_AFTER_AUTH);
+            }, 700);
+        } catch (error) {
+            setRegisterError("Unable to connect to server. Please try again.");
+        } finally {
+            setRegisterLoading(false);
+        }
     };
 
     return (
@@ -93,16 +189,17 @@ function AuthPage() {
                     </h1>
 
                     {featurePrompt && (
-                        <div className="auth-feature-message">
-                            {featurePrompt}
-                        </div>
+                        <div className="auth-feature-message">{featurePrompt}</div>
                     )}
 
                     <div className="auth-tab-switcher">
                         <button
                             type="button"
                             className={`tab-btn ${isLoginActive ? "active" : ""}`}
-                            onClick={() => setActiveTab("login")}
+                            onClick={() => {
+                                clearMessages();
+                                setActiveTab("login");
+                            }}
                         >
                             Login
                         </button>
@@ -110,7 +207,10 @@ function AuthPage() {
                         <button
                             type="button"
                             className={`tab-btn ${isRegisterActive ? "active" : ""}`}
-                            onClick={() => setActiveTab("register")}
+                            onClick={() => {
+                                clearMessages();
+                                setActiveTab("register");
+                            }}
                         >
                             Register
                         </button>
@@ -125,7 +225,7 @@ function AuthPage() {
                             <h2>Login</h2>
 
                             <form onSubmit={handleLoginSubmit}>
-                                <fieldset disabled={!isLoginActive} className="form-fieldset">
+                                <fieldset disabled={!isLoginActive || loginLoading} className="form-fieldset">
                                     <div className="form-group">
                                         <label>Email</label>
                                         <div className="input-box">
@@ -158,8 +258,23 @@ function AuthPage() {
                                         </div>
                                     </div>
 
+                                    <div className="forgot-password-wrap">
+                                        <button
+                                            type="button"
+                                            className="forgot-password-link"
+                                            onClick={() => navigate("/forgot-password")}
+                                        >
+                                            Forgot Password?
+                                        </button>
+                                    </div>
+
+                                    {loginError && <p className="auth-form-message auth-form-error">{loginError}</p>}
+                                    {loginSuccess && (
+                                        <p className="auth-form-message auth-form-success">{loginSuccess}</p>
+                                    )}
+
                                     <button type="submit" className="primary-button full-btn">
-                                        Login
+                                        {loginLoading ? "Logging in..." : "Login"}
                                     </button>
                                 </fieldset>
                             </form>
@@ -169,7 +284,10 @@ function AuthPage() {
                                 <button
                                     type="button"
                                     className="text-link"
-                                    onClick={() => setActiveTab("register")}
+                                    onClick={() => {
+                                        clearMessages();
+                                        setActiveTab("register");
+                                    }}
                                 >
                                     Register
                                 </button>
@@ -184,7 +302,10 @@ function AuthPage() {
                             <h2>Register</h2>
 
                             <form onSubmit={handleRegisterSubmit}>
-                                <fieldset disabled={!isRegisterActive} className="form-fieldset">
+                                <fieldset
+                                    disabled={!isRegisterActive || registerLoading}
+                                    className="form-fieldset"
+                                >
                                     <div className="form-group">
                                         <label>Name</label>
                                         <div className="input-box">
@@ -233,8 +354,17 @@ function AuthPage() {
                                         </div>
                                     </div>
 
+                                    {registerError && (
+                                        <p className="auth-form-message auth-form-error">{registerError}</p>
+                                    )}
+                                    {registerSuccess && (
+                                        <p className="auth-form-message auth-form-success">
+                                            {registerSuccess}
+                                        </p>
+                                    )}
+
                                     <button type="submit" className="primary-button full-btn">
-                                        Register
+                                        {registerLoading ? "Registering..." : "Register"}
                                     </button>
                                 </fieldset>
                             </form>
@@ -244,7 +374,10 @@ function AuthPage() {
                                 <button
                                     type="button"
                                     className="text-link"
-                                    onClick={() => setActiveTab("login")}
+                                    onClick={() => {
+                                        clearMessages();
+                                        setActiveTab("login");
+                                    }}
                                 >
                                     Login
                                 </button>

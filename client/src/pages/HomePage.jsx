@@ -6,7 +6,7 @@ import homeImage from "../assets/home.png";
 
 const visitorNavLinks = [
     { label: "Home", to: "/" },
-    { label: "Explore Careers", to: "/explore-careers" },
+    { label: "Explore Careers", to: "/app/explore-careers" },
     { label: "About", to: "/about" },
 ];
 
@@ -90,7 +90,7 @@ function HomePage() {
                                 Get Started
                             </Link>
 
-                            <Link to="/explore-careers" className="hero-secondary-btn">
+                            <Link to="/app/explore-careers" className="hero-secondary-btn">
                                 Explore Careers
                             </Link>
                         </div>
@@ -139,7 +139,7 @@ function HomePage() {
                                     <strong>Requires:</strong> {career.skills}
                                 </p>
 
-                                <Link to="/explore-careers" className="career-btn">
+                                <Link to="/app/explore-careers" className="career-btn">
                                     Learn More
                                 </Link>
                             </article>
