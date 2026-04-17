@@ -1,8 +1,11 @@
 import { Link } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import "../styles/HomePage.css";
 import homeImage from "../assets/home.png";
+
+const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
 const visitorNavLinks = [
     { label: "Home", to: "/" },
@@ -37,28 +40,36 @@ const features = [
     },
 ];
 
-const careers = [
-    {
-        title: "Data Scientist",
-        salary: "$90k - $140k / year",
-        skills: "Python, Machine Learning, Statistics",
-        icon: <DataScientistIcon />,
-    },
-    {
-        title: "Cyber Security",
-        salary: "$80k - $120k / year",
-        skills: "Networking, Security, Cyber Defense",
-        icon: <CyberSecurityIcon />,
-    },
-    {
-        title: "Software Engineer",
-        salary: "$85k - $130k / year",
-        skills: "JavaScript, React, SQL",
-        icon: <SoftwareEngineerIcon />,
-    },
-];
-
 function HomePage() {
+    const [popularCareers, setPopularCareers] = useState([]);
+    const [careerLoading, setCareerLoading] = useState(true);
+    const [careerError, setCareerError] = useState("");
+
+    useEffect(() => {
+        const fetchPopularCareers = async () => {
+            try {
+                setCareerLoading(true);
+                setCareerError("");
+
+                const response = await fetch(`${API_URL}/api/careers/popular`);
+                const data = await response.json();
+
+                if (!response.ok) {
+                    setCareerError(data.message || "Failed to load careers.");
+                    return;
+                }
+
+                setPopularCareers(data);
+            } catch (error) {
+                setCareerError("Unable to load popular careers right now.");
+            } finally {
+                setCareerLoading(false);
+            }
+        };
+
+        fetchPopularCareers();
+    }, []);
+
     return (
         <div className="visitor-home">
             <Header
@@ -124,33 +135,72 @@ function HomePage() {
                 <section className="popular-careers-section">
                     <h2 className="section-heading">Popular Career Paths</h2>
 
-                    <div className="career-cards">
-                        {careers.map((career) => (
-                            <article key={career.title} className="career-card">
-                                <div className="career-card-top">
-                                    <div className="career-icon">{career.icon}</div>
-                                    <div>
-                                        <h3>{career.title}</h3>
-                                        <p className="career-salary">{career.salary}</p>
+                    {careerLoading && (
+                        <p className="career-status-message">Loading popular careers...</p>
+                    )}
+
+                    {careerError && (
+                        <p className="career-status-message career-status-error">
+                            {careerError}
+                        </p>
+                    )}
+
+                    {!careerLoading && !careerError && (
+                        <div className="career-cards">
+                            {popularCareers.map((career) => (
+                                <article key={career._id} className="career-card">
+                                    <div className="career-card-top">
+                                        <div className="career-icon">
+                                            <CareerIcon title={career.title} />
+                                        </div>
+
+                                        <div>
+                                            <h3>{career.title}</h3>
+                                            <p className="career-salary">
+                                                {formatSalary(career.salaryMin, career.salaryMax)}
+                                            </p>
+                                        </div>
                                     </div>
-                                </div>
 
-                                <p className="career-skills">
-                                    <strong>Requires:</strong> {career.skills}
-                                </p>
+                                    <p className="career-skills">
+                                        <strong>Requires:</strong>{" "}
+                                        {career.requiredSkills?.join(", ") || "Skills coming soon"}
+                                    </p>
 
-                                <Link to="/app/explore-careers" className="career-btn">
-                                    Learn More
-                                </Link>
-                            </article>
-                        ))}
-                    </div>
+                                    <Link to="/app/explore-careers" className="career-btn">
+                                        Learn More
+                                    </Link>
+                                </article>
+                            ))}
+                        </div>
+                    )}
                 </section>
             </main>
 
             <Footer homePath="/" />
         </div>
     );
+}
+
+function formatSalary(min, max) {
+    if (!min && !max) return "Salary not available";
+
+    const format = (value) => `$${Math.round(value / 1000)}k`;
+
+    if (min && max) return `${format(min)} - ${format(max)} / year`;
+    if (min) return `From ${format(min)} / year`;
+    return `Up to ${format(max)} / year`;
+}
+
+function CareerIcon({ title }) {
+    const normalized = title.toLowerCase();
+
+    if (normalized.includes("data")) return <DataScientistIcon />;
+    if (normalized.includes("cyber")) return <CyberSecurityIcon />;
+    if (normalized.includes("software")) return <SoftwareEngineerIcon />;
+    if (normalized.includes("ai")) return <DataScientistIcon />;
+
+    return <SoftwareEngineerIcon />;
 }
 
 function PredictionIcon() {
