@@ -5,7 +5,7 @@ import Footer from "../components/Footer";
 import "../styles/AuthPage.css";
 
 const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
-const REDIRECT_AFTER_AUTH = "/app/explore-careers"; // change this if your logged-in page route is different
+const REDIRECT_AFTER_AUTH = "/welcome";
 
 const guestNavLinks = [
     { label: "Home", to: "/" },

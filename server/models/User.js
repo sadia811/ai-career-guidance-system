@@ -25,6 +25,10 @@ const userSchema = new mongoose.Schema(
             enum: ["user", "admin"],
             default: "user",
         },
+        hasCompletedProfile: {
+            type: Boolean,
+            default: false,
+        },
         resetPasswordToken: {
             type: String,
             default: null,
