@@ -41,19 +41,7 @@ const careers = [
         popularityScore: 91,
         isPopular: true,
         source: "seed",
-    },
-    {
-        title: "AI Engineer",
-        slug: "ai-engineer",
-        description: "Build and deploy AI-based applications and systems.",
-        salaryMin: 95000,
-        salaryMax: 150000,
-        requiredSkills: ["Python", "Deep Learning", "MLOps"],
-        industry: "AI",
-        popularityScore: 87,
-        isPopular: false,
-        source: "seed",
-    },
+    }
 ];
 
 try {

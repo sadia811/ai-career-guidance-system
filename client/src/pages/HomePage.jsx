@@ -52,16 +52,23 @@ function HomePage() {
                 setCareerError("");
 
                 const response = await fetch(`${API_URL}/api/careers/popular`);
-                const data = await response.json();
+
+                let data = null;
+                try {
+                    data = await response.json();
+                } catch (jsonError) {
+                    throw new Error(`Non-JSON response from careers API: ${response.status}`);
+                }
 
                 if (!response.ok) {
-                    setCareerError(data.message || "Failed to load careers.");
+                    setCareerError(data.message || `Failed to load careers (${response.status}).`);
                     return;
                 }
 
                 setPopularCareers(data);
             } catch (error) {
-                setCareerError("Unable to load popular careers right now.");
+                console.error("Popular careers fetch error:", error);
+                setCareerError(error.message || "Unable to load popular careers right now.");
             } finally {
                 setCareerLoading(false);
             }
