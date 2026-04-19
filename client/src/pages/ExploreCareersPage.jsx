@@ -2,8 +2,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/ExploreCareersPage.css";
 
-const [draftSearch, setDraftSearch] = useState("");
-const [searchTerm, setSearchTerm] = useState("");
+
 
 const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
@@ -32,6 +31,7 @@ function ExploreCareersPage() {
     const [pageMessage, setPageMessage] = useState("");
     const [savedOnly, setSavedOnly] = useState(false);
 
+    const [draftSearch, setDraftSearch] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
     const [draftIndustry, setDraftIndustry] = useState("All Industries");
     const [draftExperience, setDraftExperience] = useState("All Levels");
@@ -392,8 +392,8 @@ function ExploreCareersPage() {
                         <input
                             type="text"
                             placeholder="Search careers, skills..."
-                            value={searchTerm}
-                            onChange={(e) => setSearchTerm(e.target.value)}
+                            value={draftSearch}
+                            onChange={(e) => setDraftSearch(e.target.value)}
                         />
                     </div>
 
@@ -433,8 +433,8 @@ function ExploreCareersPage() {
                             <input
                                 type="text"
                                 placeholder="Search careers..."
-                                value={searchTerm}
-                                onChange={(e) => setSearchTerm(e.target.value)}
+                                value={draftSearch}
+                                onChange={(e) => setDraftSearch(e.target.value)}
                             />
                             <SearchSmallIcon />
                         </div>
