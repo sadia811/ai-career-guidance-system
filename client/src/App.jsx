@@ -7,6 +7,7 @@ import ResetPasswordPage from "./pages/ResetPasswordPage";
 import WelcomePage from "./pages/WelcomePage";
 import ProfileSetupPage from "./pages/ProfileSetupPage";
 import DashboardPage from "./pages/DashboardPage";
+import CareerPredictionPage from "./pages/CareerPredictionPage";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
       <Route path="/welcome" element={<WelcomePage />} />
       <Route path="/profile-setup" element={<ProfileSetupPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
+      <Route path="/career-prediction" element={<CareerPredictionPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/explore-careers" element={<ExploreCareersPage />} />

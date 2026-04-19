@@ -9,7 +9,7 @@ const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replac
 const sidebarItems = [
     { key: "dashboard", label: "Dashboard", icon: <DashboardIcon />, to: "/dashboard" },
     { key: "profile", label: "Profile", icon: <ProfileIcon />, to: "/profile-setup" },
-    { key: "prediction", label: "Career Prediction", icon: <PredictionIcon />, comingSoon: true },
+    { key: "prediction", label: "Career Prediction", icon: <PredictionIcon />, to: "/career-prediction" },
     { key: "explore", label: "Explore Careers", icon: <BagIcon />, to: "/app/explore-careers" },
     { key: "roadmap", label: "Roadmap", icon: <RoadmapIcon />, comingSoon: true },
     { key: "progress", label: "Progress Tracker", icon: <ProgressIcon />, comingSoon: true },
