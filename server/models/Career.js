@@ -1,5 +1,20 @@
 import mongoose from "mongoose";
 
+const salaryTrendPointSchema = new mongoose.Schema(
+    {
+        label: {
+            type: String,
+            required: true,
+            trim: true,
+        },
+        value: {
+            type: Number,
+            required: true,
+        },
+    },
+    { _id: false }
+);
+
 const careerSchema = new mongoose.Schema(
     {
         title: {
@@ -17,6 +32,21 @@ const careerSchema = new mongoose.Schema(
         description: {
             type: String,
             default: "",
+            trim: true,
+        },
+        overview: {
+            type: [String],
+            default: [],
+        },
+        industry: {
+            type: String,
+            default: "",
+            trim: true,
+        },
+        experienceLevel: {
+            type: String,
+            enum: ["Beginner", "Intermediate", "Advanced"],
+            default: "Intermediate",
         },
         salaryMin: {
             type: Number,
@@ -30,9 +60,21 @@ const careerSchema = new mongoose.Schema(
             type: [String],
             default: [],
         },
-        industry: {
+        jobRoles: {
+            type: [String],
+            default: [],
+        },
+        companies: {
+            type: [String],
+            default: [],
+        },
+        salaryTrendLabel: {
             type: String,
-            default: "",
+            default: "+0%",
+        },
+        salaryTrendPoints: {
+            type: [salaryTrendPointSchema],
+            default: [],
         },
         popularityScore: {
             type: Number,
@@ -45,6 +87,7 @@ const careerSchema = new mongoose.Schema(
         source: {
             type: String,
             default: "",
+            trim: true,
         },
         lastSyncedAt: {
             type: Date,

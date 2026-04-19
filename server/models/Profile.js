@@ -43,6 +43,17 @@ const profileSchema = new mongoose.Schema(
             type: Number,
             default: 0,
         },
+        savedCareers: [
+            {
+                type: mongoose.Schema.Types.ObjectId,
+                ref: "Career",
+            },
+        ],
+        careerGoal: {
+            type: mongoose.Schema.Types.ObjectId,
+            ref: "Career",
+            default: null,
+        },
     },
     {
         timestamps: true,

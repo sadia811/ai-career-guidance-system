@@ -5,6 +5,8 @@ import connectDB from "./config/db.js";
 import authRoutes from "./routes/authRoutes.js";
 import profileRoutes from "./routes/profileRoutes.js";
 import careerRoutes from "./routes/careerRoutes.js";
+import courseRoutes from "./routes/courseRoutes.js";
+
 
 dotenv.config();
 
@@ -45,6 +47,7 @@ app.get("/", (req, res) => {
 app.use("/api/auth", authRoutes);
 app.use("/api/profile", profileRoutes);
 app.use("/api/careers", careerRoutes);
+app.use("/api/courses", courseRoutes);
 
 const PORT = process.env.PORT || 5000;
 
