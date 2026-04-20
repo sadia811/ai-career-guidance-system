@@ -12,21 +12,60 @@ const profileNavLinks = [
     { label: "About", to: "/about" },
 ];
 
-const technicalSkillOptions = ["Python", "Java", "JavaScript", "React", "SQL", "HTML"];
-const softSkillOptions = ["Communication", "Leadership", "Problem Solving", "Teamwork"];
-const careerInterestOptions = [
-    "Artificial Intelligence",
-    "Data Science",
-    "Software",
-    "Cyber Security",
+const technicalSkillOptions = [
+    "Python",
+    "JavaScript",
+    "React",
+    "Node.js",
+    "SQL",
+    "HTML",
+    "CSS",
+    "Java",
+    "Machine Learning",
+    "Deep Learning",
+    "Statistics",
+    "Data Visualization",
+    "Pandas",
+    "TensorFlow",
     "Networking",
+    "Security",
+    "Ethical Hacking",
+    "Git",
 ];
-const experienceTagOptions = [
-    "Artificial Intelligence",
+
+const softSkillOptions = [
+    "Communication",
+    "Problem Solving",
+    "Teamwork",
+    "Leadership",
+    "Critical Thinking",
+    "Time Management",
+    "Adaptability",
+    "Presentation",
+];
+
+const careerInterestOptions = [
     "Data Science",
+    "Artificial Intelligence",
+    "Software Engineering",
     "Cyber Security",
-    "Networking",
+    "Web Development",
+    "Cloud Computing",
+    "DevOps",
+    "Business Intelligence",
+];
+
+const experienceTagOptions = [
+    "Academic Projects",
+    "Research",
+    "Internship",
     "Software Development",
+    "Data Analysis",
+    "Machine Learning",
+    "Cyber Security",
+    "Web Development",
+    "Hackathons",
+    "Freelancing",
 ];
 
 function ProfileSetupPage() {
@@ -245,18 +284,23 @@ function ProfileSetupPage() {
                             <section className="profile-block">
                                 <div className="profile-block-header">
                                     <h2>Technical Skills</h2>
-                                    <button type="button" className="add-skill-btn">+ Add Skill</button>
                                 </div>
 
                                 <div className="skill-grid">
                                     {technicalSkillOptions.map((skill) => (
-                                        <label key={skill} className={`skill-pill ${formData.technicalSkills.includes(skill) ? "checked" : ""}`}>
+                                        <label
+                                            key={skill}
+                                            className={`skill-pill ${formData.technicalSkills.includes(skill) ? "checked" : ""
+                                                }`}
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={formData.technicalSkills.includes(skill)}
                                                 onChange={() => handleCheckboxToggle("technicalSkills", skill)}
                                             />
-                                            <span className="checkmark-box">{formData.technicalSkills.includes(skill) ? "✓" : ""}</span>
+                                            <span className="checkmark-box">
+                                                {formData.technicalSkills.includes(skill) ? "✓" : ""}
+                                            </span>
                                             <span>{skill}</span>
                                         </label>
                                     ))}
@@ -266,18 +310,23 @@ function ProfileSetupPage() {
                             <section className="profile-block">
                                 <div className="profile-block-header">
                                     <h2>Soft Skills</h2>
-                                    <button type="button" className="add-skill-btn">+ Add Skill</button>
                                 </div>
 
                                 <div className="skill-grid">
                                     {softSkillOptions.map((skill) => (
-                                        <label key={skill} className={`skill-pill ${formData.softSkills.includes(skill) ? "checked" : ""}`}>
+                                        <label
+                                            key={skill}
+                                            className={`skill-pill ${formData.softSkills.includes(skill) ? "checked" : ""
+                                                }`}
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={formData.softSkills.includes(skill)}
                                                 onChange={() => handleCheckboxToggle("softSkills", skill)}
                                             />
-                                            <span className="checkmark-box">{formData.softSkills.includes(skill) ? "✓" : ""}</span>
+                                            <span className="checkmark-box">
+                                                {formData.softSkills.includes(skill) ? "✓" : ""}
+                                            </span>
                                             <span>{skill}</span>
                                         </label>
                                     ))}
@@ -287,18 +336,23 @@ function ProfileSetupPage() {
                             <section className="profile-block">
                                 <div className="profile-block-header">
                                     <h2>Career Interests</h2>
-                                    <button type="button" className="add-skill-btn">+ Add Skill</button>
                                 </div>
 
                                 <div className="skill-grid">
                                     {careerInterestOptions.map((skill) => (
-                                        <label key={skill} className={`skill-pill ${formData.careerInterests.includes(skill) ? "checked" : ""}`}>
+                                        <label
+                                            key={skill}
+                                            className={`skill-pill ${formData.careerInterests.includes(skill) ? "checked" : ""
+                                                }`}
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={formData.careerInterests.includes(skill)}
                                                 onChange={() => handleCheckboxToggle("careerInterests", skill)}
                                             />
-                                            <span className="checkmark-box">{formData.careerInterests.includes(skill) ? "✓" : ""}</span>
+                                            <span className="checkmark-box">
+                                                {formData.careerInterests.includes(skill) ? "✓" : ""}
+                                            </span>
                                             <span>{skill}</span>
                                         </label>
                                     ))}
@@ -310,13 +364,19 @@ function ProfileSetupPage() {
 
                                 <div className="skill-grid">
                                     {experienceTagOptions.map((skill) => (
-                                        <label key={skill} className={`skill-pill ${formData.experienceTags.includes(skill) ? "checked" : ""}`}>
+                                        <label
+                                            key={skill}
+                                            className={`skill-pill ${formData.experienceTags.includes(skill) ? "checked" : ""
+                                                }`}
+                                        >
                                             <input
                                                 type="checkbox"
                                                 checked={formData.experienceTags.includes(skill)}
                                                 onChange={() => handleCheckboxToggle("experienceTags", skill)}
                                             />
-                                            <span className="checkmark-box">{formData.experienceTags.includes(skill) ? "✓" : ""}</span>
+                                            <span className="checkmark-box">
+                                                {formData.experienceTags.includes(skill) ? "✓" : ""}
+                                            </span>
                                             <span>{skill}</span>
                                         </label>
                                     ))}
@@ -330,7 +390,7 @@ function ProfileSetupPage() {
                                     <textarea
                                         name="experienceText"
                                         rows="5"
-                                        placeholder="Describe your work experience, internships, and projects"
+                                        placeholder="Describe your work experience, internships, projects, and strengths"
                                         value={formData.experienceText}
                                         onChange={handleTextChange}
                                     />

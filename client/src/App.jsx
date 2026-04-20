@@ -9,6 +9,7 @@ import ProfileSetupPage from "./pages/ProfileSetupPage";
 import DashboardPage from "./pages/DashboardPage";
 import CareerPredictionPage from "./pages/CareerPredictionPage";
 import RoadmapPage from "./pages/RoadmapPage";
+import ProgressTrackerPage from "./pages/ProgressTrackerPage";
 
 function App() {
   return (
@@ -24,6 +25,7 @@ function App() {
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/explore-careers" element={<ExploreCareersPage />} />
       <Route path="/app/explore-careers" element={<ExploreCareersPage />} />
+      <Route path="/progress-tracker" element={<ProgressTrackerPage />} />
     </Routes>
   );
 }

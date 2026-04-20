@@ -168,7 +168,7 @@ function RoadmapPage() {
         ];
     }, [profileData]);
 
-    const readinessPercentage = useMemo(() => {
+    const skillMatchPercentage = useMemo(() => {
         const required = goalCareer?.requiredSkills || [];
         if (!required.length) return 0;
 
@@ -212,7 +212,7 @@ function RoadmapPage() {
                 key: "step-4",
                 phase: "Step 4",
                 title: "Build practical portfolio projects",
-                description: `Create 2 to 3 practical projects related to ${careerTitle} and publish them in your portfolio or GitHub.`,
+                description: `Create 2 to 3 practical projects related to ${goalCareer?.title || "your target career"} and publish them in your portfolio or GitHub.`,
             },
             {
                 key: "step-5",
@@ -223,6 +223,11 @@ function RoadmapPage() {
             },
         ];
     }, [goalCareer, missingSkills, courses]);
+
+    const roadmapCompletionPercentage = useMemo(() => {
+        if (!roadmapSteps.length) return 0;
+        return Math.round((completedSteps.length / roadmapSteps.length) * 100);
+    }, [completedSteps, roadmapSteps]);
 
     const suggestedProjects = useMemo(() => {
         const title = String(goalCareer?.title || "").toLowerCase();
@@ -271,25 +276,25 @@ function RoadmapPage() {
             {
                 title: "Foundation Stage",
                 description: "Understand the role, tools, workflow, and required fundamentals.",
-                done: readinessPercentage >= 25,
+                done: roadmapCompletionPercentage >= 20,
             },
             {
                 title: "Core Skills Stage",
-                description: "Work on required skills, complete learning resources, and practice consistently.",
-                done: readinessPercentage >= 50,
+                description: "Work on required skills and complete guided learning resources.",
+                done: roadmapCompletionPercentage >= 40,
             },
             {
                 title: "Project Stage",
                 description: "Build real-world projects and strengthen your portfolio quality.",
-                done: readinessPercentage >= 75,
+                done: roadmapCompletionPercentage >= 60,
             },
             {
                 title: "Job Ready Stage",
                 description: "Prepare for interviews, resume building, and role-specific applications.",
-                done: readinessPercentage >= 90,
+                done: roadmapCompletionPercentage >= 80,
             },
         ];
-    }, [readinessPercentage]);
+    }, [roadmapCompletionPercentage]);
 
     const handleToggleStep = async (stepKey) => {
         if (!goalCareer?._id || !token) return;
@@ -381,7 +386,7 @@ function RoadmapPage() {
                             <div className="roadmap-meta-row">
                                 <span>{goalCareer?.industry || "Career Path"}</span>
                                 <span>{formatSalary(goalCareer?.salaryMin, goalCareer?.salaryMax)}</span>
-                                <span>{readinessPercentage}% readiness</span>
+                                <span>{skillMatchPercentage}% skill match</span>
                             </div>
 
                             <div className="roadmap-hero-actions">
@@ -403,10 +408,16 @@ function RoadmapPage() {
                             </div>
                         </div>
 
-                        <div className="roadmap-progress-ring">
+                        <div
+                            className="roadmap-progress-ring"
+                            style={{
+                                background: `conic-gradient(#4f86e8 0deg, #4f86e8 ${roadmapCompletionPercentage * 3.6
+                                    }deg, #e9effa ${roadmapCompletionPercentage * 3.6}deg 360deg)`,
+                            }}
+                        >
                             <div className="roadmap-progress-inner">
-                                <span>{readinessPercentage}%</span>
-                                <small>Readiness</small>
+                                <span>{roadmapCompletionPercentage}%</span>
+                                <small>Roadmap Progress</small>
                             </div>
                         </div>
                     </section>
@@ -432,18 +443,22 @@ function RoadmapPage() {
                                                 <p>{step.description}</p>
                                             </div>
 
-                                            <button
-                                                type="button"
-                                                className={`roadmap-step-btn ${isDone ? "completed" : ""}`}
-                                                onClick={() => handleToggleStep(step.key)}
-                                                disabled={updatingStepKey === step.key}
-                                            >
-                                                {updatingStepKey === step.key
-                                                    ? "Saving..."
-                                                    : isDone
-                                                        ? "Completed"
-                                                        : "Mark Complete"}
-                                            </button>
+                                            <label className="roadmap-step-check">
+                                                <input
+                                                    type="checkbox"
+                                                    checked={isDone}
+                                                    onChange={() => handleToggleStep(step.key)}
+                                                    disabled={updatingStepKey === step.key}
+                                                />
+                                                <span className="roadmap-checkmark"></span>
+                                                <span className="roadmap-check-label">
+                                                    {updatingStepKey === step.key
+                                                        ? "Saving..."
+                                                        : isDone
+                                                            ? "Completed"
+                                                            : "Mark as complete"}
+                                                </span>
+                                            </label>
                                         </div>
                                     );
                                 })}
