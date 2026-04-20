@@ -1,0 +1,102 @@
+.admin-message-banner {
+    margin-bottom: 16px;
+    background: #eef4ff;
+    border: 1px solid #dbe7fb;
+    border-radius: 16px;
+    padding: 14px 16px;
+    color: #356bcc;
+    font-weight: 600;
+}
+
+.admin-messages-state {
+    background: #ffffff;
+    border: 1px solid #e8edf7;
+    border-radius: 22px;
+    padding: 24px;
+}
+
+.admin-messages-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.admin-message-card {
+    background: #ffffff;
+    border: 1px solid #e8edf7;
+    border-radius: 22px;
+    padding: 22px;
+    box-shadow: 0 10px 22px rgba(51, 84, 145, 0.04);
+}
+
+.admin-message-top {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 14px;
+}
+
+.admin-message-top h3 {
+    margin: 0 0 6px;
+    color: #1f315d;
+}
+
+.admin-message-top p {
+    margin: 0;
+    color: #5f6a84;
+}
+
+.admin-message-status {
+    min-height: 32px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-message-status.unread {
+    background: #fff3ef;
+    color: #d97357;
+}
+
+.admin-message-status.read {
+    background: #edf9f0;
+    color: #39a868;
+}
+
+.admin-message-body {
+    margin: 0 0 18px;
+    color: #314160;
+    line-height: 1.8;
+}
+
+.admin-message-actions {
+    display: flex;
+    gap: 12px;
+    flex-wrap: wrap;
+}
+
+.admin-read-btn,
+.admin-delete-btn {
+    min-width: 140px;
+    height: 44px;
+    border-radius: 12px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-read-btn {
+    border: 1.5px solid #cfe0fb;
+    background: #ffffff;
+    color: #356bcc;
+}
+
+.admin-delete-btn {
+    border: none;
+    background: #d14f5b;
+    color: #ffffff;
+}

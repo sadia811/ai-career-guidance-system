@@ -11,9 +11,10 @@ import CareerPredictionPage from "./pages/CareerPredictionPage";
 import RoadmapPage from "./pages/RoadmapPage";
 import ProgressTrackerPage from "./pages/ProgressTrackerPage";
 import CoursesPage from "./pages/CoursesPage";
-import AboutPage from "./pages/AboutPage";
 import ContactPage from "./pages/ContactPage";
+import AboutPage from "./pages/AboutPage";
 import SettingsPage from "./pages/SettingsPage";
+import AdminMessagesPage from "./pages/AdminMessagesPage";
 
 function App() {
   return (
@@ -34,6 +35,7 @@ function App() {
       <Route path="/about" element={<AboutPage />} />
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/settings" element={<SettingsPage />} />
+      <Route path="/admin/messages" element={<AdminMessagesPage />} />
     </Routes>
   );
 }

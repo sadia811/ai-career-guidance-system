@@ -1,7 +1,10 @@
 import { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
+import { getStoredUser } from "../utils/auth";
 import "../styles/StaticInfoPage.css";
+
+const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
 
 const visitorNavLinks = [
     { label: "Home", to: "/" },
@@ -11,11 +14,70 @@ const visitorNavLinks = [
 ];
 
 function ContactPage() {
-    const [submitted, setSubmitted] = useState(false);
+    const storedUser = getStoredUser() || {};
 
-    const handleSubmit = (e) => {
+    const [formData, setFormData] = useState({
+        name: storedUser.name || "",
+        email: storedUser.email || "",
+        subject: "",
+        message: "",
+    });
+
+    const [sending, setSending] = useState(false);
+    const [feedback, setFeedback] = useState("");
+
+    const handleChange = (e) => {
+        const { name, value } = e.target;
+
+        setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+
+        setFeedback("");
+    };
+
+    const handleSubmit = async (e) => {
         e.preventDefault();
-        setSubmitted(true);
+
+        if (!formData.name || !formData.email || !formData.message) {
+            setFeedback("Please fill in name, email, and message.");
+            return;
+        }
+
+        try {
+            setSending(true);
+            setFeedback("");
+
+            const response = await fetch(`${API_URL}/api/contact`, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                    ...(storedUser?.token
+                        ? { Authorization: `Bearer ${storedUser.token}` }
+                        : {}),
+                },
+                body: JSON.stringify(formData),
+            });
+
+            const data = await response.json();
+
+            if (!response.ok) {
+                setFeedback(data.message || "Unable to send message.");
+                return;
+            }
+
+            setFeedback("Message sent successfully.");
+            setFormData((prev) => ({
+                ...prev,
+                subject: "",
+                message: "",
+            }));
+        } catch (error) {
+            setFeedback("Unable to connect to server right now.");
+        } finally {
+            setSending(false);
+        }
     };
 
     return (
@@ -32,24 +94,52 @@ function ContactPage() {
                     <span className="static-page-chip">Contact Us</span>
                     <h1>Get in touch</h1>
                     <p>
-                        Questions, feedback, or support requests can be sent through this form.
+                        Send your questions, feedback, or support requests. Your message will be stored
+                        and visible to admins in the system.
                     </p>
 
                     <form className="static-contact-form" onSubmit={handleSubmit}>
-                        <input type="text" placeholder="Your name" required />
-                        <input type="email" placeholder="Your email" required />
-                        <textarea rows="6" placeholder="Write your message here" required />
+                        <input
+                            type="text"
+                            name="name"
+                            placeholder="Your name"
+                            value={formData.name}
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <input
+                            type="email"
+                            name="email"
+                            placeholder="Your email"
+                            value={formData.email}
+                            onChange={handleChange}
+                            required
+                        />
+
+                        <input
+                            type="text"
+                            name="subject"
+                            placeholder="Subject"
+                            value={formData.subject}
+                            onChange={handleChange}
+                        />
+
+                        <textarea
+                            rows="6"
+                            name="message"
+                            placeholder="Write your message here"
+                            value={formData.message}
+                            onChange={handleChange}
+                            required
+                        />
 
                         <button type="submit" className="static-submit-btn">
-                            Send Message
+                            {sending ? "Sending..." : "Send Message"}
                         </button>
                     </form>
 
-                    {submitted && (
-                        <p className="static-success-text">
-                            Message submitted. The real backend contact endpoint can be connected next.
-                        </p>
-                    )}
+                    {feedback && <p className="static-success-text">{feedback}</p>}
                 </section>
             </main>
 
