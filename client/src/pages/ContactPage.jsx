@@ -74,6 +74,7 @@ function ContactPage() {
                 message: "",
             }));
         } catch (error) {
+            console.error("Contact form error:", error);
             setFeedback("Unable to connect to server right now.");
         } finally {
             setSending(false);
@@ -86,7 +87,7 @@ function ContactPage() {
                 navLinks={visitorNavLinks}
                 homePath="/"
                 rightAction={{ label: "Login / Register", to: "/auth" }}
-                mode="auto"
+                mode="guest"
             />
 
             <main className="static-page-main">

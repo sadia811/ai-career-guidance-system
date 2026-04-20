@@ -10,6 +10,8 @@ import predictionRoutes from "./routes/predictionRoutes.js";
 import roadmapRoutes from "./routes/roadmapRoutes.js";
 import userSettingsRoutes from "./routes/userSettingsRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 dotenv.config();
 
@@ -55,6 +57,8 @@ app.use("/api/prediction", predictionRoutes);
 app.use("/api/roadmap", roadmapRoutes);
 app.use("/api/users", userSettingsRoutes);
 app.use("/api/contact", contactRoutes);
+app.use("/api/admin", adminRoutes);
+<Route path="/admin/dashboard" element={<AdminDashboardPage />} />
 
 const PORT = process.env.PORT || 5000;
 

@@ -1,0 +1,221 @@
+.admin-dashboard-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.admin-dashboard-state {
+    background: #ffffff;
+    border: 1px solid #e8edf7;
+    border-radius: 24px;
+    padding: 24px;
+    color: #1f315d;
+    font-weight: 600;
+}
+
+.admin-dashboard-state.error {
+    color: #d14f5b;
+}
+
+.admin-overview-grid {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 16px;
+}
+
+.admin-stat-card {
+    background: #ffffff;
+    border: 1px solid #e8edf7;
+    border-radius: 22px;
+    box-shadow: 0 10px 22px rgba(51, 84, 145, 0.04);
+    padding: 22px 20px;
+}
+
+.admin-stat-card span {
+    display: block;
+    margin-bottom: 10px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #65708a;
+}
+
+.admin-stat-card strong {
+    font-size: 34px;
+    color: #1f315d;
+}
+
+.admin-panel-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+}
+
+.admin-panel-card {
+    background: #ffffff;
+    border: 1px solid #e8edf7;
+    border-radius: 24px;
+    box-shadow: 0 10px 22px rgba(51, 84, 145, 0.04);
+    padding: 22px;
+}
+
+.admin-panel-card.full-span {
+    grid-column: 1 / -1;
+}
+
+.admin-panel-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+
+.admin-panel-head h3 {
+    margin: 0;
+    color: #1f315d;
+    font-size: 24px;
+}
+
+.admin-link-btn {
+    border: none;
+    background: transparent;
+    color: #356bcc;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+}
+
+.admin-list {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+}
+
+.admin-list-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 14px;
+    padding: 14px 16px;
+    border: 1px solid #edf2fb;
+    border-radius: 18px;
+    background: #fcfdff;
+}
+
+.admin-list-item h4 {
+    margin: 0 0 6px;
+    font-size: 18px;
+    color: #1f315d;
+}
+
+.admin-list-item p {
+    margin: 0;
+    color: #5f6a84;
+    font-size: 14px;
+}
+
+.admin-list-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-items: flex-end;
+}
+
+.admin-badge {
+    min-height: 30px;
+    padding: 0 12px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    font-size: 13px;
+    font-weight: 700;
+}
+
+.admin-badge.success {
+    background: #edf9f0;
+    color: #39a868;
+}
+
+.admin-badge.warning {
+    background: #fff3ef;
+    color: #d97357;
+}
+
+.admin-badge.neutral {
+    background: #f4f7fc;
+    color: #7a86a1;
+}
+
+.admin-badge.admin {
+    background: #eef4ff;
+    color: #356bcc;
+}
+
+.admin-career-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 16px;
+}
+
+.admin-career-card {
+    border: 1px solid #edf2fb;
+    border-radius: 18px;
+    background: #fcfdff;
+    padding: 18px;
+}
+
+.admin-career-card h4 {
+    margin: 0 0 8px;
+    color: #1f315d;
+    font-size: 19px;
+}
+
+.admin-career-card p {
+    margin: 0 0 12px;
+    color: #5f6a84;
+}
+
+.admin-career-meta {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    color: #356bcc;
+    font-weight: 600;
+}
+
+.admin-empty-text {
+    margin: 0;
+    color: #5f6a84;
+    line-height: 1.8;
+}
+
+@media (max-width: 1280px) {
+    .admin-overview-grid {
+        grid-template-columns: repeat(3, 1fr);
+    }
+
+    .admin-career-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+}
+
+@media (max-width: 900px) {
+
+    .admin-overview-grid,
+    .admin-panel-grid,
+    .admin-career-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-panel-card.full-span {
+        grid-column: auto;
+    }
+
+    .admin-list-item {
+        flex-direction: column;
+    }
+
+    .admin-list-meta {
+        align-items: flex-start;
+    }
+}

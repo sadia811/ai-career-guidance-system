@@ -15,6 +15,7 @@ import ContactPage from "./pages/ContactPage";
 import AboutPage from "./pages/AboutPage";
 import SettingsPage from "./pages/SettingsPage";
 import AdminMessagesPage from "./pages/AdminMessagesPage";
+import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/admin/messages" element={<AdminMessagesPage />} />
+      <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
     </Routes>
   );
 }
