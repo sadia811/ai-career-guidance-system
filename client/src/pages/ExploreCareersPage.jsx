@@ -1,22 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import LoggedInShell from "../components/LoggedInShell";
 import "../styles/ExploreCareersPage.css";
 
 
 
 const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replace(/\/$/, "");
-
-const sidebarItems = [
-    { key: "dashboard", label: "Dashboard", icon: <DashboardIcon />, to: "/dashboard" },
-    { key: "profile", label: "Profile", icon: <ProfileIcon />, to: "/profile-setup" },
-    { key: "prediction", label: "Career Prediction", icon: <PredictionIcon />, to: "/career-prediction" },
-    { key: "explore", label: "Explore Careers", icon: <BagIcon />, to: "/app/explore-careers" },
-    { key: "roadmap", label: "Roadmap", icon: <RoadmapIcon />, comingSoon: true },
-    { key: "progress", label: "Progress Tracker", icon: <ProgressIcon />, comingSoon: true },
-    { key: "courses", label: "Courses", icon: <CoursesIcon />, comingSoon: true },
-    { key: "resources", label: "Resources", icon: <ResourcesIcon />, comingSoon: true },
-    { key: "logout", label: "Logout", icon: <LogoutIcon />, action: "logout" },
-];
 
 const industryOptions = ["All Industries", "Data", "AI", "Security", "Software"];
 const experienceOptions = ["All Levels", "Beginner", "Intermediate", "Advanced"];
@@ -216,25 +205,6 @@ function ExploreCareersPage() {
         displayedCareers.find((career) => career._id === selectedCareerId) ||
         null;
 
-    const handleSidebarClick = (item) => {
-        setPageMessage("");
-
-        if (item.action === "logout") {
-            localStorage.removeItem("userInfo");
-            navigate("/auth");
-            return;
-        }
-
-        if (item.comingSoon) {
-            setPageMessage(`${item.label} page will be connected next.`);
-            return;
-        }
-
-        if (item.to) {
-            navigate(item.to);
-        }
-    };
-
     const handleApplyFilters = () => {
         setSearchTerm(draftSearch);
         setIndustryFilter(draftIndustry);
@@ -363,40 +333,13 @@ function ExploreCareersPage() {
     const selectedCareerTabItems = getActiveTabItems(selectedCareer, activeTab);
 
     return (
-        <div className="explore-page">
-            <aside className="explore-sidebar">
-                <div className="explore-brand">
-                    <BrandLogo />
-                    <span>Career Guidance</span>
-                </div>
-
-                <nav className="explore-sidebar-nav">
-                    {sidebarItems.map((item) => (
-                        <button
-                            key={item.key}
-                            type="button"
-                            className={`sidebar-item ${item.key === "explore" ? "active" : ""}`}
-                            onClick={() => handleSidebarClick(item)}
-                        >
-                            <span className="sidebar-icon">{item.icon}</span>
-                            <span>{item.label}</span>
-                        </button>
-                    ))}
-                </nav>
-            </aside>
-
-            <div className="explore-content-wrap">
-                <header className="explore-topbar">
-                    <div className="topbar-search">
-                        <SearchIcon />
-                        <input
-                            type="text"
-                            placeholder="Search careers, skills..."
-                            value={draftSearch}
-                            onChange={(e) => setDraftSearch(e.target.value)}
-                        />
-                    </div>
-
+        <LoggedInShell
+            activeKey="explore"
+            title="Career Exploration"
+            subtitle="Discover career paths, skills, salary insights and job trends."
+        >
+            <div className="explore-main-shell">
+                <div className="explore-toolbar">
                     <button
                         type="button"
                         className={`saved-btn ${savedOnly ? "active" : ""}`}
@@ -413,321 +356,308 @@ function ExploreCareersPage() {
                         <BellIcon />
                         <span className="notif-badge">3</span>
                     </button>
+                </div>
 
-                    <button type="button" className="profile-chip" onClick={() => navigate("/dashboard")}>
-                        <AvatarLetter name={userName} />
-                        <span>{userName}</span>
-                        <ChevronDownIcon />
+                <section className="filter-bar">
+                    <div className="filter-search">
+                        <SearchIcon />
+                        <input
+                            type="text"
+                            placeholder="Search careers..."
+                            value={draftSearch}
+                            onChange={(e) => setDraftSearch(e.target.value)}
+                        />
+                        <SearchSmallIcon />
+                    </div>
+
+                    <select
+                        className="filter-select"
+                        value={draftIndustry}
+                        onChange={(e) => setDraftIndustry(e.target.value)}
+                    >
+                        {industryOptions.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+
+                    <select
+                        className="filter-select"
+                        value={draftExperience}
+                        onChange={(e) => setDraftExperience(e.target.value)}
+                    >
+                        {experienceOptions.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+
+                    <select
+                        className="filter-select"
+                        value={draftSalary}
+                        onChange={(e) => setDraftSalary(e.target.value)}
+                    >
+                        {salaryOptions.map((option) => (
+                            <option key={option} value={option}>
+                                {option}
+                            </option>
+                        ))}
+                    </select>
+
+                    <button type="button" className="apply-filter-btn" onClick={handleApplyFilters}>
+                        <FilterTuneIcon />
+                        <span>Apply Filters</span>
                     </button>
-                </header>
 
-                <main className="explore-main">
-                    <section className="page-heading-block">
-                        <h1>Career Exploration</h1>
-                        <p>Discover career paths, skills, salary insights and job trends.</p>
-                    </section>
+                    <button type="button" className="remove-filter-btn" onClick={handleRemoveFilters}>
+                        Remove Filters
+                    </button>
+                </section>
 
-                    <section className="filter-bar">
-                        <div className="filter-search">
-                            <SearchIcon />
-                            <input
-                                type="text"
-                                placeholder="Search careers..."
-                                value={draftSearch}
-                                onChange={(e) => setDraftSearch(e.target.value)}
-                            />
-                            <SearchSmallIcon />
-                        </div>
+                {pageMessage && <div className="page-message-banner">{pageMessage}</div>}
 
-                        <select
-                            className="filter-select"
-                            value={draftIndustry}
-                            onChange={(e) => setDraftIndustry(e.target.value)}
-                        >
-                            {industryOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </select>
+                <section className="popular-careers-block">
+                    <div className="section-title-row">
+                        <h2>{savedOnly ? "Saved Careers" : "Popular Career Paths"}</h2>
 
-                        <select
-                            className="filter-select"
-                            value={draftExperience}
-                            onChange={(e) => setDraftExperience(e.target.value)}
-                        >
-                            {experienceOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </select>
-
-                        <select
-                            className="filter-select"
-                            value={draftSalary}
-                            onChange={(e) => setDraftSalary(e.target.value)}
-                        >
-                            {salaryOptions.map((option) => (
-                                <option key={option} value={option}>
-                                    {option}
-                                </option>
-                            ))}
-                        </select>
-
-                        <button type="button" className="apply-filter-btn" onClick={handleApplyFilters}>
-                            <FilterTuneIcon />
-                            <span>Apply Filters</span>
+                        <button type="button" className="view-all-link" onClick={handleViewAll}>
+                            <span>View All</span>
+                            <ArrowRightIcon />
                         </button>
+                    </div>
 
-                        <button type="button" className="remove-filter-btn" onClick={handleRemoveFilters}>
-                            Remove Filters
-                        </button>
-                    </section>
-
-                    {pageMessage && <div className="page-message-banner">{pageMessage}</div>}
-
-                    <section className="popular-careers-block">
-                        <div className="section-title-row">
-                            <h2>{savedOnly ? "Saved Careers" : "Popular Career Paths"}</h2>
-
-                            <button type="button" className="view-all-link" onClick={handleViewAll}>
-                                <span>View All</span>
-                                <ArrowRightIcon />
-                            </button>
+                    {loadingCareers ? (
+                        <div className="explore-empty-state">Loading careers...</div>
+                    ) : careerError ? (
+                        <div className="explore-empty-state error-state">{careerError}</div>
+                    ) : displayedCareers.length === 0 ? (
+                        <div className="explore-empty-state">
+                            No careers match your current search or filter options.
                         </div>
+                    ) : (
+                        <div className="career-grid">
+                            {displayedCareers.map((career) => {
+                                const isSaved = savedCareerIds.includes(String(career._id));
 
-                        {loadingCareers ? (
-                            <div className="explore-empty-state">Loading careers...</div>
-                        ) : careerError ? (
-                            <div className="explore-empty-state error-state">{careerError}</div>
-                        ) : displayedCareers.length === 0 ? (
-                            <div className="explore-empty-state">
-                                No careers match your current search or filter options.
-                            </div>
-                        ) : (
-                            <div className="career-grid">
-                                {displayedCareers.map((career) => {
-                                    const isSaved = savedCareerIds.includes(String(career._id));
-
-                                    return (
-                                        <article
-                                            key={career._id}
-                                            className={`career-tile ${selectedCareer?._id === career._id ? "selected" : ""}`}
-                                            onClick={() => {
+                                return (
+                                    <article
+                                        key={career._id}
+                                        className={`career-tile ${selectedCareer?._id === career._id ? "selected" : ""}`}
+                                        onClick={() => {
+                                            setSelectedCareerId(career._id);
+                                            setActiveTab("Overview");
+                                        }}
+                                        role="button"
+                                        tabIndex={0}
+                                        onKeyDown={(e) => {
+                                            if (e.key === "Enter" || e.key === " ") {
                                                 setSelectedCareerId(career._id);
                                                 setActiveTab("Overview");
-                                            }}
-                                            role="button"
-                                            tabIndex={0}
-                                            onKeyDown={(e) => {
-                                                if (e.key === "Enter" || e.key === " ") {
-                                                    setSelectedCareerId(career._id);
-                                                    setActiveTab("Overview");
-                                                }
-                                            }}
-                                        >
-                                            <div className="career-tile-top">
-                                                <div className="career-tile-icon">{getCareerIcon(career.title)}</div>
+                                            }
+                                        }}
+                                    >
+                                        <div className="career-tile-top">
+                                            <div className="career-tile-icon">{getCareerIcon(career.title)}</div>
 
-                                                <button
-                                                    type="button"
-                                                    className={`bookmark-chip ${getBookmarkColor(career.title)} ${isSaved ? "saved" : ""}`}
-                                                    onClick={(e) => {
-                                                        e.stopPropagation();
-                                                        handleToggleSaveCareer(career._id);
-                                                    }}
-                                                >
-                                                    <BookmarkIcon />
-                                                </button>
-                                            </div>
+                                            <button
+                                                type="button"
+                                                className={`bookmark-chip ${getBookmarkColor(career.title)} ${isSaved ? "saved" : ""}`}
+                                                onClick={(e) => {
+                                                    e.stopPropagation();
+                                                    handleToggleSaveCareer(career._id);
+                                                }}
+                                            >
+                                                <BookmarkIcon />
+                                            </button>
+                                        </div>
 
-                                            <h3>{career.title}</h3>
+                                        <h3>{career.title}</h3>
 
-                                            <p className="career-money">
-                                                <span className="money-symbol">$</span>{" "}
-                                                {formatSalary(career.salaryMin, career.salaryMax)}
-                                            </p>
+                                        <p className="career-money">
+                                            <span className="money-symbol">$</span>{" "}
+                                            {formatSalary(career.salaryMin, career.salaryMax)}
+                                        </p>
 
-                                            <div className="skill-pill-wrap">
-                                                {(career.requiredSkills || []).slice(0, 3).map((skill) => (
-                                                    <span key={skill} className="skill-pill">
-                                                        {skill}
-                                                    </span>
-                                                ))}
-                                            </div>
+                                        <div className="skill-pill-wrap">
+                                            {(career.requiredSkills || []).slice(0, 3).map((skill) => (
+                                                <span key={skill} className="skill-pill">
+                                                    {skill}
+                                                </span>
+                                            ))}
+                                        </div>
 
-                                            <span className="view-details-btn">
-                                                <span>View Details</span>
-                                                <ArrowRightIcon />
-                                            </span>
-                                        </article>
-                                    );
-                                })}
+                                        <span className="view-details-btn">
+                                            <span>View Details</span>
+                                            <ArrowRightIcon />
+                                        </span>
+                                    </article>
+                                );
+                            })}
+                        </div>
+                    )}
+                </section>
+
+                {selectedCareer && (
+                    <section className="details-courses-grid">
+                        <article className="career-details-card">
+                            <div className="details-header">
+                                <div className="details-left">
+                                    <button type="button" className="back-inline-btn">
+                                        <ChevronLeftIcon />
+                                    </button>
+                                    <span className="details-title">Career Details</span>
+                                    <span className="details-career-icon">{getCareerIcon(selectedCareer.title)}</span>
+                                    <span className="details-career-name">{selectedCareer.title}</span>
+                                </div>
                             </div>
-                        )}
-                    </section>
 
-                    {selectedCareer && (
-                        <section className="details-courses-grid">
-                            <article className="career-details-card">
-                                <div className="details-header">
-                                    <div className="details-left">
-                                        <button type="button" className="back-inline-btn">
-                                            <ChevronLeftIcon />
-                                        </button>
-                                        <span className="details-title">Career Details</span>
-                                        <span className="details-career-icon">{getCareerIcon(selectedCareer.title)}</span>
-                                        <span className="details-career-name">{selectedCareer.title}</span>
-                                    </div>
-                                </div>
+                            <div className="details-tabs">
+                                {["Overview", "Skills", "Job Roles", "Companies"].map((tab) => (
+                                    <button
+                                        key={tab}
+                                        type="button"
+                                        className={`tab-link ${activeTab === tab ? "active" : ""}`}
+                                        onClick={() => setActiveTab(tab)}
+                                    >
+                                        {tab}
+                                    </button>
+                                ))}
+                            </div>
 
-                                <div className="details-tabs">
-                                    {["Overview", "Skills", "Job Roles", "Companies"].map((tab) => (
-                                        <button
-                                            key={tab}
-                                            type="button"
-                                            className={`tab-link ${activeTab === tab ? "active" : ""}`}
-                                            onClick={() => setActiveTab(tab)}
-                                        >
-                                            {tab}
-                                        </button>
-                                    ))}
-                                </div>
+                            {loadingCareerDetails ? (
+                                <div className="explore-empty-state">Loading career details...</div>
+                            ) : (
+                                <div className="details-content">
+                                    <div className="job-description-block">
+                                        <h4>
+                                            {activeTab === "Overview"
+                                                ? "Job Description"
+                                                : activeTab === "Skills"
+                                                    ? "Required Skills"
+                                                    : activeTab === "Job Roles"
+                                                        ? "Common Job Roles"
+                                                        : "Top Companies"}
+                                        </h4>
 
-                                {loadingCareerDetails ? (
-                                    <div className="explore-empty-state">Loading career details...</div>
-                                ) : (
-                                    <div className="details-content">
-                                        <div className="job-description-block">
-                                            <h4>
-                                                {activeTab === "Overview"
-                                                    ? "Job Description"
-                                                    : activeTab === "Skills"
-                                                        ? "Required Skills"
-                                                        : activeTab === "Job Roles"
-                                                            ? "Common Job Roles"
-                                                            : "Top Companies"}
-                                            </h4>
-
-                                            <ul className="job-list">
-                                                {selectedCareerTabItems.length > 0 ? (
-                                                    selectedCareerTabItems.map((item) => (
-                                                        <li key={item}>
-                                                            <span className="job-list-icon">
-                                                                <DocMiniIcon />
-                                                            </span>
-                                                            <span>{item}</span>
-                                                        </li>
-                                                    ))
-                                                ) : (
-                                                    <li>
+                                        <ul className="job-list">
+                                            {selectedCareerTabItems.length > 0 ? (
+                                                selectedCareerTabItems.map((item) => (
+                                                    <li key={item}>
                                                         <span className="job-list-icon">
                                                             <DocMiniIcon />
                                                         </span>
-                                                        <span>No data available yet.</span>
+                                                        <span>{item}</span>
                                                     </li>
-                                                )}
-                                            </ul>
-                                        </div>
-
-                                        <div className="salary-trend-card">
-                                            <div className="salary-trend-top">
-                                                <h4>Salary Trend</h4>
-                                                <span className="trend-badge">
-                                                    {selectedCareer.salaryTrendLabel || "+0%"}
-                                                </span>
-                                            </div>
-
-                                            <SalaryTrendChart points={selectedCareer.salaryTrendPoints || []} />
-
-                                            <div className="trend-range">
-                                                <span>{salaryMini(selectedCareer.salaryMin)}</span>
-                                                <span>{salaryMini(selectedCareer.salaryMax)}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                )}
-
-                                <div className="details-actions">
-                                    <button type="button" className="primary-goal-btn" onClick={handleSetCareerGoal}>
-                                        <HeartOutlineIcon />
-                                        <span>Set as Career Goal</span>
-                                    </button>
-
-                                    <button
-                                        type="button"
-                                        className="secondary-roadmap-btn"
-                                        onClick={() => setPageMessage("Roadmap page will be connected next.")}
-                                    >
-                                        <span>View Roadmap</span>
-                                        <ArrowRightIcon />
-                                    </button>
-                                </div>
-                            </article>
-
-                            <article className="courses-card">
-                                <div className="section-title-row course-title-row">
-                                    <h2>Recommended Courses</h2>
-                                    <button type="button" className="view-all-link">
-                                        <span>View All</span>
-                                        <ArrowRightIcon />
-                                    </button>
-                                </div>
-
-                                {loadingCourses ? (
-                                    <div className="explore-empty-state">Loading courses...</div>
-                                ) : coursesError ? (
-                                    <div className="explore-empty-state error-state">{coursesError}</div>
-                                ) : courses.length === 0 ? (
-                                    <div className="explore-empty-state">
-                                        No courses are available for this career yet.
-                                    </div>
-                                ) : (
-                                    <div className="course-list">
-                                        {courses.map((course) => (
-                                            <div key={course._id} className="course-row">
-                                                <div className="course-left">
-                                                    <span className="course-logo">
-                                                        <CourseLogoIcon />
+                                                ))
+                                            ) : (
+                                                <li>
+                                                    <span className="job-list-icon">
+                                                        <DocMiniIcon />
                                                     </span>
+                                                    <span>No data available yet.</span>
+                                                </li>
+                                            )}
+                                        </ul>
+                                    </div>
 
-                                                    <div className="course-meta">
-                                                        <h4>{course.title}</h4>
-                                                        <p>{course.provider}</p>
-                                                    </div>
-                                                </div>
+                                    <div className="salary-trend-card">
+                                        <div className="salary-trend-top">
+                                            <h4>Salary Trend</h4>
+                                            <span className="trend-badge">
+                                                {selectedCareer.salaryTrendLabel || "+0%"}
+                                            </span>
+                                        </div>
 
-                                                <div className="course-right">
-                                                    <div className="course-progress-wrap">
-                                                        <div className="course-progress-bar">
-                                                            <div
-                                                                className="course-progress-fill"
-                                                                style={{ width: `${course.progress || 0}%` }}
-                                                            />
-                                                        </div>
-                                                        <span className="course-progress-text">{course.progress || 0}%</span>
-                                                    </div>
+                                        <SalaryTrendChart points={selectedCareer.salaryTrendPoints || []} />
 
-                                                    <button
-                                                        type="button"
-                                                        className="start-btn"
-                                                        onClick={() => handleStartCourse(course)}
-                                                    >
-                                                        <span>{course.progress > 0 ? "Continue" : "Start"}</span>
-                                                        <ArrowRightIcon />
-                                                    </button>
+                                        <div className="trend-range">
+                                            <span>{salaryMini(selectedCareer.salaryMin)}</span>
+                                            <span>{salaryMini(selectedCareer.salaryMax)}</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            )}
+
+                            <div className="details-actions">
+                                <button type="button" className="primary-goal-btn" onClick={handleSetCareerGoal}>
+                                    <HeartOutlineIcon />
+                                    <span>Set as Career Goal</span>
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="secondary-roadmap-btn"
+                                    onClick={() => navigate("/roadmap")}
+                                >
+                                    <span>View Roadmap</span>
+                                    <ArrowRightIcon />
+                                </button>
+                            </div>
+                        </article>
+
+                        <article className="courses-card">
+                            <div className="section-title-row course-title-row">
+                                <h2>Recommended Courses</h2>
+                                <button type="button" className="view-all-link">
+                                    <span>View All</span>
+                                    <ArrowRightIcon />
+                                </button>
+                            </div>
+
+                            {loadingCourses ? (
+                                <div className="explore-empty-state">Loading courses...</div>
+                            ) : coursesError ? (
+                                <div className="explore-empty-state error-state">{coursesError}</div>
+                            ) : courses.length === 0 ? (
+                                <div className="explore-empty-state">
+                                    No courses are available for this career yet.
+                                </div>
+                            ) : (
+                                <div className="course-list">
+                                    {courses.map((course) => (
+                                        <div key={course._id} className="course-row">
+                                            <div className="course-left">
+                                                <span className="course-logo">
+                                                    <CourseLogoIcon />
+                                                </span>
+
+                                                <div className="course-meta">
+                                                    <h4>{course.title}</h4>
+                                                    <p>{course.provider}</p>
                                                 </div>
                                             </div>
-                                        ))}
-                                    </div>
-                                )}
-                            </article>
-                        </section>
-                    )}
-                </main>
+
+                                            <div className="course-right">
+                                                <div className="course-progress-wrap">
+                                                    <div className="course-progress-bar">
+                                                        <div
+                                                            className="course-progress-fill"
+                                                            style={{ width: `${course.progress || 0}%` }}
+                                                        />
+                                                    </div>
+                                                    <span className="course-progress-text">{course.progress || 0}%</span>
+                                                </div>
+
+                                                <button
+                                                    type="button"
+                                                    className="start-btn"
+                                                    onClick={() => handleStartCourse(course)}
+                                                >
+                                                    <span>{course.progress > 0 ? "Continue" : "Start"}</span>
+                                                    <ArrowRightIcon />
+                                                </button>
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
+                        </article>
+                    </section>
+                )}
             </div>
-        </div>
+        </LoggedInShell>
     );
 }
 
@@ -822,81 +752,7 @@ function getCareerIcon(title = "") {
     return <SoftwareCareerIcon />;
 }
 
-function AvatarLetter({ name }) {
-    return <span className="avatar-letter">{(name || "U").charAt(0).toUpperCase()}</span>;
-}
 
-function BrandLogo() {
-    return (
-        <svg className="brand-logo-svg" viewBox="0 0 64 64" fill="none" aria-hidden="true" width="42" height="42">
-            <circle cx="31" cy="32" r="17" stroke="#4B84E5" strokeWidth="7" />
-            <circle cx="31" cy="32" r="7" stroke="#1F3767" strokeWidth="4" />
-            <circle cx="14" cy="31" r="4" fill="#1F3767" />
-            <circle cx="48" cy="15" r="4" fill="#1F3767" />
-            <circle cx="48" cy="49" r="4" fill="#1F3767" />
-            <path d="M18 21C22 15 28 12 35 12" stroke="#8FB8F4" strokeWidth="4" strokeLinecap="round" />
-            <path d="M43 43C39 48 34 51 27 51" stroke="#8FB8F4" strokeWidth="4" strokeLinecap="round" />
-        </svg>
-    );
-}
-
-function DashboardIcon() {
-    return <SimpleIcon d="M4 4H10V10H4V4ZM14 4H20V10H14V4ZM4 14H10V20H4V14ZM14 14H20V20H14V14Z" />;
-}
-
-function ProfileIcon() {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="24" height="24">
-            <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="2" />
-            <path d="M5 20C5 16.686 7.686 14 11 14H13C16.314 14 19 16.686 19 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-    );
-}
-
-function PredictionIcon() {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="24" height="24">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" strokeWidth="2" />
-            <path d="M16.5 16.5L20 20" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            <path d="M8 11H14M11 8V14" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-    );
-}
-
-function BagIcon() {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="24" height="24">
-            <path d="M5 8H19L18 20H6L5 8Z" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" />
-            <path d="M9 9V7C9 5.343 10.343 4 12 4C13.657 4 15 5.343 15 7V9" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-    );
-}
-
-function RoadmapIcon() {
-    return <SimpleIcon d="M5 18C8 18 8 6 12 6C16 6 16 18 19 18M12 6V18" strokeOnly />;
-}
-
-function ProgressIcon() {
-    return <SimpleIcon d="M5 18L10 13L13 16L19 10" strokeOnly />;
-}
-
-function CoursesIcon() {
-    return <SimpleIcon d="M4 6H20V18H4V6ZM8 10H16M8 14H13" strokeOnly />;
-}
-
-function ResourcesIcon() {
-    return <SimpleIcon d="M6 4H16L20 8V20H6V4ZM16 4V8H20" strokeOnly />;
-}
-
-function LogoutIcon() {
-    return (
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true" width="24" height="24">
-            <path d="M10 17L15 12L10 7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
-            <path d="M15 12H4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-            <path d="M13 4H18C19.105 4 20 4.895 20 6V18C20 19.105 19.105 20 18 20H13" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
-        </svg>
-    );
-}
 
 function SearchIcon() {
     return (

@@ -1,3 +1,7 @@
+.prediction-main {
+    width: 100%;
+}
+
 .prediction-page {
     min-height: 100vh;
     display: grid;

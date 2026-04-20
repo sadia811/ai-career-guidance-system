@@ -8,6 +8,7 @@ import WelcomePage from "./pages/WelcomePage";
 import ProfileSetupPage from "./pages/ProfileSetupPage";
 import DashboardPage from "./pages/DashboardPage";
 import CareerPredictionPage from "./pages/CareerPredictionPage";
+import RoadmapPage from "./pages/RoadmapPage";
 
 function App() {
   return (
@@ -18,6 +19,7 @@ function App() {
       <Route path="/profile-setup" element={<ProfileSetupPage />} />
       <Route path="/dashboard" element={<DashboardPage />} />
       <Route path="/career-prediction" element={<CareerPredictionPage />} />
+      <Route path="/roadmap" element={<RoadmapPage />} />
       <Route path="/forgot-password" element={<ForgotPasswordPage />} />
       <Route path="/reset-password/:token" element={<ResetPasswordPage />} />
       <Route path="/explore-careers" element={<ExploreCareersPage />} />
