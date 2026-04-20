@@ -1,7 +1,7 @@
 import Career from "../models/Career.js";
 import Course from "../models/Course.js";
 import Profile from "../models/Profile.js";
-import UserCourseProgress from "../models/UserCourseProgress.js";
+import CourseProgress from "../models/CourseProgress.js";
 
 const buildSalaryFilter = (salaryRange) => {
     if (!salaryRange || salaryRange === "All Ranges") return {};
@@ -207,18 +207,22 @@ export const getCareerCourses = async (req, res) => {
         const courses = await Course.find({
             careers: careerId,
             isActive: true,
-        }).sort({ createdAt: -1 });
+        })
+            .sort({ createdAt: -1 })
+            .lean();
 
-        const progressDocs = await UserCourseProgress.find({
+        const courseIds = courses.map((course) => course._id);
+
+        const progressDocs = await CourseProgress.find({
             user: req.user._id,
-            course: { $in: courses.map((course) => course._id) },
-        });
+            course: { $in: courseIds },
+        }).lean();
 
         const progressMap = new Map(
             progressDocs.map((item) => [String(item.course), item])
         );
 
-        const response = courses.map((course) => {
+        const mergedCourses = courses.map((course) => {
             const progress = progressMap.get(String(course._id));
 
             return {
@@ -226,17 +230,20 @@ export const getCareerCourses = async (req, res) => {
                 title: course.title,
                 provider: course.provider,
                 url: course.url,
+                description: course.description,
                 skillsCovered: course.skillsCovered,
                 difficulty: course.difficulty,
                 durationHours: course.durationHours,
-                progress: progress?.progress ?? 0,
-                status: progress?.status ?? "not-started",
+                completedSessions: progress?.completedSessions || 0,
+                totalSessions: progress?.totalSessions || 5,
+                progress: progress?.progress || 0,
+                status: progress?.status || "Not Started",
             };
         });
 
-        res.status(200).json(response);
+        return res.status(200).json(mergedCourses);
     } catch (error) {
-        res.status(500).json({
+        return res.status(500).json({
             message: "Server error while fetching courses",
             error: error.message,
         });

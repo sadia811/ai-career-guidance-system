@@ -10,6 +10,7 @@ import DashboardPage from "./pages/DashboardPage";
 import CareerPredictionPage from "./pages/CareerPredictionPage";
 import RoadmapPage from "./pages/RoadmapPage";
 import ProgressTrackerPage from "./pages/ProgressTrackerPage";
+import CoursesPage from "./pages/CoursesPage";
 
 function App() {
   return (
@@ -26,6 +27,7 @@ function App() {
       <Route path="/explore-careers" element={<ExploreCareersPage />} />
       <Route path="/app/explore-careers" element={<ExploreCareersPage />} />
       <Route path="/progress-tracker" element={<ProgressTrackerPage />} />
+      <Route path="/courses" element={<CoursesPage />} />
     </Routes>
   );
 }
