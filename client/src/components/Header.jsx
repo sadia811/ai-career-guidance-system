@@ -1,35 +1,39 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import "../styles/Header.css";
+import { clearStoredUser, getStoredUser } from "../utils/auth";
 
 function Header({
   navLinks = [],
   homePath = "/",
   rightAction = null,
+  mode = "auto", // "auto" | "guest" | "user"
 }) {
   const navigate = useNavigate();
   const location = useLocation();
   const dropdownRef = useRef(null);
 
-  const [userInfo, setUserInfo] = useState(() => {
-    return JSON.parse(localStorage.getItem("userInfo") || "null");
-  });
+  const [userInfo, setUserInfo] = useState(() => getStoredUser());
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
-  const isLoggedIn = Boolean(userInfo?.token);
+  const effectiveLoggedIn =
+    mode === "guest" ? false : Boolean(userInfo?.token);
+
   const userName = userInfo?.name || "User";
   const hasCompletedProfile = Boolean(userInfo?.hasCompletedProfile);
 
   useEffect(() => {
     const syncUserInfo = () => {
-      setUserInfo(JSON.parse(localStorage.getItem("userInfo") || "null"));
+      setUserInfo(getStoredUser());
     };
 
     syncUserInfo();
     window.addEventListener("storage", syncUserInfo);
+    window.addEventListener("user-auth-changed", syncUserInfo);
 
     return () => {
       window.removeEventListener("storage", syncUserInfo);
+      window.removeEventListener("user-auth-changed", syncUserInfo);
     };
   }, []);
 
@@ -52,7 +56,7 @@ function Header({
   }, [location.pathname]);
 
   const handleLogout = () => {
-    localStorage.removeItem("userInfo");
+    clearStoredUser();
     setUserInfo(null);
     setIsDropdownOpen(false);
     navigate("/auth");
@@ -64,8 +68,10 @@ function Header({
       label: hasCompletedProfile ? "Update Profile" : "Complete Profile",
       to: "/profile-setup",
     },
+    { label: "Settings", to: "/settings" },
     { label: "Explore Careers", to: "/app/explore-careers" },
-    { label: "Welcome Page", to: "/welcome" },
+    { label: "About", to: "/about" },
+    { label: "Contact Us", to: "/contact" },
   ];
 
   return (
@@ -95,7 +101,7 @@ function Header({
         </nav>
 
         <div className="site-header-right">
-          {isLoggedIn ? (
+          {effectiveLoggedIn ? (
             <div className="profile-dropdown-wrap" ref={dropdownRef}>
               <button
                 type="button"
@@ -119,7 +125,11 @@ function Header({
 
                   <div className="profile-dropdown-links">
                     {dropdownItems.map((item) => (
-                      <Link key={item.label} to={item.to} className="profile-dropdown-link">
+                      <Link
+                        key={item.label}
+                        to={item.to}
+                        className="profile-dropdown-link"
+                      >
                         {item.label}
                       </Link>
                     ))}
@@ -180,18 +190,8 @@ function BrandLogo() {
       <circle cx="14" cy="31" r="4" fill="#1F3767" />
       <circle cx="48" cy="15" r="4" fill="#1F3767" />
       <circle cx="48" cy="49" r="4" fill="#1F3767" />
-      <path
-        d="M18 21C22 15 28 12 35 12"
-        stroke="#8FB8F4"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
-      <path
-        d="M43 43C39 48 34 51 27 51"
-        stroke="#8FB8F4"
-        strokeWidth="4"
-        strokeLinecap="round"
-      />
+      <path d="M18 21C22 15 28 12 35 12" stroke="#8FB8F4" strokeWidth="4" strokeLinecap="round" />
+      <path d="M43 43C39 48 34 51 27 51" stroke="#8FB8F4" strokeWidth="4" strokeLinecap="round" />
     </svg>
   );
 }

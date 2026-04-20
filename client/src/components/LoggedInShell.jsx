@@ -1,6 +1,7 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/LoggedInShell.css";
+import { clearStoredUser, getStoredUser } from "../utils/auth";
 
 const navItems = [
     { key: "dashboard", label: "Dashboard", icon: <DashboardIcon />, to: "/dashboard" },
@@ -10,33 +11,50 @@ const navItems = [
     { key: "roadmap", label: "Roadmap", icon: <RoadmapIcon />, to: "/roadmap" },
     { key: "progress", label: "Progress Tracker", icon: <ProgressIcon />, to: "/progress-tracker" },
     { key: "courses", label: "Courses", icon: <CoursesIcon />, to: "/courses" },
-    { key: "resources", label: "Resources", icon: <ResourcesIcon />, to: "/resources" },
     { key: "logout", label: "Logout", icon: <LogoutIcon />, action: "logout" },
 ];
 
 function LoggedInShell({ activeKey, title, subtitle, children }) {
     const navigate = useNavigate();
-    const storedUser = JSON.parse(localStorage.getItem("userInfo") || "{}");
+    const profileMenuRef = useRef(null);
+
+    const storedUser = getStoredUser() || {};
     const userName = storedUser?.name || "User";
 
     const [sidebarOpen, setSidebarOpen] = useState(false);
     const [bannerMessage, setBannerMessage] = useState("");
+    const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (!profileMenuRef.current?.contains(event.target)) {
+                setProfileMenuOpen(false);
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => document.removeEventListener("mousedown", handleClickOutside);
+    }, []);
+
+    const handleLogout = () => {
+        clearStoredUser();
+        setProfileMenuOpen(false);
+        navigate("/auth");
+    };
 
     const handleNavClick = (item) => {
         setBannerMessage("");
 
         if (item.action === "logout") {
-            localStorage.removeItem("userInfo");
-            navigate("/auth");
+            handleLogout();
             return;
         }
 
         if (item.to) {
             navigate(item.to);
+            setSidebarOpen(false);
             return;
         }
-
-        setBannerMessage(`${item.label} page will be connected next.`);
     };
 
     return (
@@ -87,17 +105,64 @@ function LoggedInShell({ activeKey, title, subtitle, children }) {
                         {subtitle ? <p>{subtitle}</p> : null}
                     </div>
 
-                    <button
-                        type="button"
-                        className="logged-profile-chip"
-                        onClick={() => navigate("/profile-setup")}
-                    >
-                        <span className="logged-avatar-letter">
-                            {(userName || "U").charAt(0).toUpperCase()}
-                        </span>
-                        <span className="logged-profile-name">{userName}</span>
-                        <ChevronDownIcon />
-                    </button>
+                    <div className="logged-profile-dropdown" ref={profileMenuRef}>
+                        <button
+                            type="button"
+                            className="logged-profile-chip"
+                            onClick={() => setProfileMenuOpen((prev) => !prev)}
+                        >
+                            <span className="logged-avatar-letter">
+                                {(userName || "U").charAt(0).toUpperCase()}
+                            </span>
+                            <span className="logged-profile-name">{userName}</span>
+                            <ChevronDownIcon />
+                        </button>
+
+                        {profileMenuOpen && (
+                            <div className="logged-profile-menu">
+                                <button
+                                    type="button"
+                                    className="logged-profile-menu-link"
+                                    onClick={() => {
+                                        setProfileMenuOpen(false);
+                                        navigate("/profile-setup");
+                                    }}
+                                >
+                                    Update Profile
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="logged-profile-menu-link"
+                                    onClick={() => {
+                                        setProfileMenuOpen(false);
+                                        navigate("/settings");
+                                    }}
+                                >
+                                    Settings
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="logged-profile-menu-link"
+                                    onClick={() => {
+                                        setProfileMenuOpen(false);
+                                        navigate("/contact");
+                                    }}
+                                >
+                                    Contact Us
+                                </button>
+
+                                <button
+                                    type="button"
+                                    className="logged-profile-menu-link danger"
+                                    onClick={handleLogout}
+                                >
+                                    Logout
+                                </button>
+                            </div>
+                        )}
+                    </div>
                 </header>
 
                 {bannerMessage ? <div className="logged-shell-banner">{bannerMessage}</div> : null}
@@ -182,10 +247,6 @@ function ProgressIcon() {
 
 function CoursesIcon() {
     return <SimpleIcon d="M4 6H20V18H4V6ZM8 10H16M8 14H13" strokeOnly />;
-}
-
-function ResourcesIcon() {
-    return <SimpleIcon d="M6 4H16L20 8V20H6V4ZM16 4V8H20" strokeOnly />;
 }
 
 function LogoutIcon() {

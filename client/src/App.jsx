@@ -11,6 +11,9 @@ import CareerPredictionPage from "./pages/CareerPredictionPage";
 import RoadmapPage from "./pages/RoadmapPage";
 import ProgressTrackerPage from "./pages/ProgressTrackerPage";
 import CoursesPage from "./pages/CoursesPage";
+import AboutPage from "./pages/AboutPage";
+import ContactPage from "./pages/ContactPage";
+import SettingsPage from "./pages/SettingsPage";
 
 function App() {
   return (
@@ -28,6 +31,9 @@ function App() {
       <Route path="/app/explore-careers" element={<ExploreCareersPage />} />
       <Route path="/progress-tracker" element={<ProgressTrackerPage />} />
       <Route path="/courses" element={<CoursesPage />} />
+      <Route path="/about" element={<AboutPage />} />
+      <Route path="/contact" element={<ContactPage />} />
+      <Route path="/settings" element={<SettingsPage />} />
     </Routes>
   );
 }

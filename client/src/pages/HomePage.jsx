@@ -88,6 +88,7 @@ function HomePage() {
                     label: "Login / Register",
                     to: "/auth",
                 }}
+                mode="guest"
             />
 
             <main className="home-main">

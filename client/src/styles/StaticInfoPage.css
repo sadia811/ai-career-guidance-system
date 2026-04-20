@@ -1,0 +1,112 @@
+.static-page {
+    min-height: 100vh;
+    background: #f7f6fd;
+}
+
+.static-page-main {
+    padding: 48px 20px 70px;
+}
+
+.static-page-card {
+    max-width: 1100px;
+    margin: 0 auto;
+    background: #ffffff;
+    border: 1px solid #e8edf7;
+    border-radius: 28px;
+    box-shadow: 0 12px 26px rgba(51, 84, 145, 0.06);
+    padding: 34px 30px;
+}
+
+.static-page-chip {
+    display: inline-flex;
+    min-height: 36px;
+    align-items: center;
+    padding: 0 16px;
+    border-radius: 999px;
+    background: #edf4ff;
+    color: #356bcc;
+    font-size: 14px;
+    font-weight: 700;
+    margin-bottom: 18px;
+}
+
+.static-page-card h1 {
+    margin: 0 0 14px;
+    font-size: 42px;
+    color: #1f315d;
+}
+
+.static-page-card p {
+    margin: 0 0 18px;
+    font-size: 16px;
+    line-height: 1.8;
+    color: #5f6a84;
+}
+
+.static-page-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    margin-top: 20px;
+}
+
+.static-page-grid article {
+    border: 1px solid #edf2fb;
+    border-radius: 20px;
+    padding: 20px;
+    background: #fcfdff;
+}
+
+.static-page-grid h3 {
+    margin: 0 0 8px;
+    color: #1f315d;
+}
+
+.static-contact-form {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    margin-top: 24px;
+}
+
+.static-contact-form input,
+.static-contact-form textarea {
+    width: 100%;
+    border: 1.5px solid #dde6f5;
+    border-radius: 14px;
+    padding: 14px 16px;
+    font-size: 15px;
+    outline: none;
+}
+
+.static-submit-btn {
+    min-width: 180px;
+    height: 50px;
+    border: none;
+    border-radius: 14px;
+    color: #ffffff;
+    font-size: 16px;
+    font-weight: 600;
+    background: linear-gradient(90deg, #4f88ea 0%, #4279de 100%);
+    cursor: pointer;
+}
+
+.static-success-text {
+    margin-top: 16px;
+    color: #2d8c5b;
+    font-weight: 600;
+}
+
+@media (max-width: 768px) {
+    .static-page-card {
+        padding: 26px 18px;
+    }
+
+    .static-page-card h1 {
+        font-size: 34px;
+    }
+
+    .static-page-grid {
+        grid-template-columns: 1fr;
+    }
+}

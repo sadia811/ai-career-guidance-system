@@ -182,6 +182,48 @@
   padding: 22px 24px 34px 88px;
 }
 
+
+.logged-profile-dropdown {
+  position: relative;
+}
+
+.logged-profile-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 210px;
+  background: #ffffff;
+  border: 1px solid #e2e8f5;
+  border-radius: 18px;
+  box-shadow: 0 18px 38px rgba(31, 49, 93, 0.12);
+  padding: 10px;
+  z-index: 1400;
+}
+
+.logged-profile-menu-link {
+  width: 100%;
+  min-height: 44px;
+  border: none;
+  background: transparent;
+  border-radius: 12px;
+  padding: 0 12px;
+  text-align: left;
+  font-size: 15px;
+  font-weight: 600;
+  color: #314160;
+  cursor: pointer;
+}
+
+.logged-profile-menu-link:hover {
+  background: #eef4ff;
+  color: #356bcc;
+}
+
+.logged-profile-menu-link.danger {
+  color: #d14f5b;
+}
+
+
 @media (max-width: 1024px) {
   .logged-shell-main.shifted {
     padding-left: 0;

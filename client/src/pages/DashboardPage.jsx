@@ -9,7 +9,8 @@ const API_URL = (import.meta.env.VITE_API_URL || "http://localhost:5000").replac
 const dashboardNavLinks = [
     { label: "Dashboard", to: "/dashboard" },
     { label: "Explore Careers", to: "/app/explore-careers" },
-    { label: "About", to: "/about" },
+    { label: "Roadmap", to: "/roadmap" },
+    { label: "Contact", to: "/contact" },
 ];
 
 function DashboardPage() {
@@ -94,6 +95,7 @@ function DashboardPage() {
                 homePath="/dashboard"
                 showProfileButton={true}
                 profilePath="/dashboard"
+                mode="user"
             />
 
             <main className="dashboard-main">

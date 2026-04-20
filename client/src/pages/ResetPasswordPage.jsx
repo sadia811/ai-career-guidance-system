@@ -82,6 +82,7 @@ function ResetPasswordPage() {
                 homePath="/"
                 showProfileButton={true}
                 profilePath="/auth"
+                mode="guest"
             />
 
             <main className="forgot-main">

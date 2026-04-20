@@ -8,6 +8,7 @@ import careerRoutes from "./routes/careerRoutes.js";
 import courseRoutes from "./routes/courseRoutes.js";
 import predictionRoutes from "./routes/predictionRoutes.js";
 import roadmapRoutes from "./routes/roadmapRoutes.js";
+import userSettingsRoutes from "./routes/userSettingsRoutes.js";
 
 
 dotenv.config();
@@ -52,6 +53,7 @@ app.use("/api/careers", careerRoutes);
 app.use("/api/courses", courseRoutes);
 app.use("/api/prediction", predictionRoutes);
 app.use("/api/roadmap", roadmapRoutes);
+app.use("/api/users", userSettingsRoutes);
 
 const PORT = process.env.PORT || 5000;
 
