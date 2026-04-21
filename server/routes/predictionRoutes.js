@@ -1,9 +1,9 @@
 import express from "express";
 import { protect } from "../middleware/authMiddleware.js";
-import { updateCourseProgress } from "../controllers/courseProgressController.js";
+import { predictMyCareer } from "../controllers/predictionController.js";
 
 const router = express.Router();
 
-router.post("/:courseId/progress", protect, updateCourseProgress);
+router.post("/me", protect, predictMyCareer);
 
 export default router;
