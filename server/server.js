@@ -58,7 +58,6 @@ app.use("/api/roadmap", roadmapRoutes);
 app.use("/api/users", userSettingsRoutes);
 app.use("/api/contact", contactRoutes);
 app.use("/api/admin", adminRoutes);
-<Route path="/admin/dashboard" element={<AdminDashboardPage />} />
 
 const PORT = process.env.PORT || 5000;
 

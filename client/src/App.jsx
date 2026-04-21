@@ -37,6 +37,7 @@ function App() {
       <Route path="/contact" element={<ContactPage />} />
       <Route path="/settings" element={<SettingsPage />} />
       <Route path="/admin/messages" element={<AdminMessagesPage />} />
+      <Route path="/admin/dashboard" element={<AdminDashboardPage />} />
     </Routes>
   );
 }
