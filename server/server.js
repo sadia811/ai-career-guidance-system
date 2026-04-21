@@ -11,7 +11,6 @@ import roadmapRoutes from "./routes/roadmapRoutes.js";
 import userSettingsRoutes from "./routes/userSettingsRoutes.js";
 import contactRoutes from "./routes/contactRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
-import AdminDashboardPage from "./pages/AdminDashboardPage";
 
 dotenv.config();
 
